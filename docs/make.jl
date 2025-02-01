@@ -40,3 +40,9 @@ makedocs(;
         "FAQ" => "faq.md"
     ],
 )
+
+deploydocs(;
+    repo="github.com/Kallo27/SDDESolarDynamo.jl.git",
+    devbranch="main",
+    target="gh-pages",
+)
