@@ -1,16 +1,21 @@
 # Add the src directory to the LOAD_PATH
 push!(LOAD_PATH, "./src")
 
-# Include the SDDESolarDynamo.jl file from the src directory
+# Include the module files from the src directory
 include("../src/SDDESolarDynamo.jl")
+include("../src/DirUtils.jl")
+include("../src/VisualizationTools.jl")
 
-# Use the module
+# Use the modules
 using .SDDESolarDynamo
+using .DirUtils
+using .VisualizationTools
+
 using Documenter
 
-
+# Generate documentation
 makedocs(;
-    modules=[SDDESolarDynamo],
+    modules=[SDDESolarDynamo, DirUtils, VisualizationTools],  # Include all modules
     authors="Lorenzo Calandra Buonaura, Lucrezia Rossi, Andrea Turci",
     repo="https://github.com/Kallo27/SDDESolarDynamo.jl",  # Keep this as a string
     sitename="SDDESolarDynamo.jl",
@@ -25,19 +30,13 @@ makedocs(;
     ),
     pages= [
         "Home" => "index.md",
-        #"Getting started" => "usage.md",
-        #"Modules" => [
-        #    "Model" => "modules/model.md",
-        #    "DirUtils" => "modules/dirmanaging.md",
-        #    "VisualizationTools" => "modules/visualization.md"
-        #],
-        #"API" => "api.md",
-        #"FAQ" => "faq.md"
+        "Getting started" => "usage.md",
+        "Modules" => [
+            "SDDESolarDynamo" => "modules/sddesolardynamo.md",
+            "DirUtils" => "modules/dirutils.md",
+            "VisualizationTools" => "modules/visualizationtools.md"
+        ],
+        "API" => "api.md",
+        "FAQ" => "faq.md"
     ],
 )
-
-#deploydocs(;
-#    repo="github.com/Kallo27/SSDESolarDynamo.jl",
-#    devbranch="main",
-#    target="gh-pages",
-#)
