@@ -3,19 +3,19 @@ push!(LOAD_PATH, "./src")
 
 # Include the module files from the src directory
 include("../src/SDDESolarDynamo.jl")
-#include("../src/DirUtils.jl")
+include("../src/DirUtils.jl")
 #include("../src/VisualizationTools.jl")
 
 # Use the modules
 using .SDDESolarDynamo
-#using .DirUtils
+using .DirUtils
 #using .VisualizationTools
 
 using Documenter
 
 # Generate documentation
 makedocs(;
-    modules=[SDDESolarDynamo], #DirUtils, VisualizationTools],  # Include all modules
+    modules=[SDDESolarDynamo, DirUtils], #VisualizationTools],  # Include all modules
     authors="Lorenzo Calandra Buonaura, Lucrezia Rossi, Andrea Turci",
     repo="https://github.com/Kallo27/SDDESolarDynamo.jl",  # Keep this as a string
     sitename="SDDESolarDynamo.jl",

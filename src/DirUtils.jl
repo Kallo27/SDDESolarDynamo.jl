@@ -196,7 +196,6 @@ function load_param_sim_data(filename::String = "parameters.csv")
   return df
 end
 
-"""load solution"""
 function load_solution(filename::String = "simulated_sol.csv")
   df = CSV.read(filename, DataFrame)
 
