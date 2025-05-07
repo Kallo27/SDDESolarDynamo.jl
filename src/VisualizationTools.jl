@@ -68,6 +68,8 @@ function plot_fourier_spectrum(t::Union{Vector{Float64}, Vector{Int64}}, u::Vect
   end
 end
 
+"""
+"""
 function plot_data(t::Union{Vector{Float64}, Vector{Int64}}, u::Vector{Float64})
   p = Plots.plot(t, u, label = "B(t)", xlabel = "Time", ylabel = "Magnetic Field Strength", 
   title = "Simulated data", linewidth = 1)
