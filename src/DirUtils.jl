@@ -24,37 +24,47 @@ using CSV
 using XLSX
 
 # function to load the dataset
-function load_sunspots_data(filename::String = "SN Usoskin Brehm.xlsx")
-  filepath = "./data/" * filename
-  data = DataFrame(
-    year = Int[],
-    open_magn_flux = Float64[],
-    open_magn_flux_err = Float64[],
-    ssa_open_magn_flux = Float64[],
-    sunspots_num = Float64[],
-    sunspots_err = Float64[],
-    ssa_sunspots = Float64[]
-  )
+"""
+$(TYPEDSIGNATURES)
+Loads the dataset (real data).
 
-  XLSX.openxlsx(filepath) do file
-    sheet = file["Data"]
+# PARAMETERS
+- `filename::String="SN Usoskin Brehm.xlsx"`: name of the file containing the dataset.
+
+# RETURNS
+- `data`: DataFrame instance containing the extracted data.
+"""
+function load_sunspots_data(filename::String = "SN Usoskin Brehm.xlsx")
+    filepath = "./data/" * filename
+    data = DataFrame(
+        year = Int[],
+        open_magn_flux = Float64[],
+        open_magn_flux_err = Float64[],
+        ssa_open_magn_flux = Float64[],
+        sunspots_num = Float64[],
+        sunspots_err = Float64[],
+        ssa_sunspots = Float64[]
+    )
+
+    XLSX.openxlsx(filepath) do file
+        sheet = file["Data"]
 
     for row in XLSX.eachrow(sheet)
-      if isa(row[2], Number)
-        push!(data, (
-          year = row[2],
-          open_magn_flux = row[3],
-          open_magn_flux_err = row[4],
-          ssa_open_magn_flux = row[5],
-          sunspots_num = row[7],
-          sunspots_err = row[8],
-          ssa_sunspots = row[9]
-        ))
-      end
+        if isa(row[2], Number)
+            push!(data, (
+                year = row[2],
+                open_magn_flux = row[3],
+                open_magn_flux_err = row[4],
+                ssa_open_magn_flux = row[5],
+                sunspots_num = row[7],
+                sunspots_err = row[8],
+                ssa_sunspots = row[9]
+            ))
+            end
+        end
     end
-  end
 
-  return data
+    return data
 end
 
 
@@ -62,33 +72,34 @@ end
 
 # function to create a new directory for each simulations, in order to store the needed files
 function create_directory(dir_type::String)
-  base_path = pwd()
-  base_path = joinpath(base_path, "Simulations")
-  i = 1
+    base_path = pwd()
+    i = 1
   
-  if dir_type == "Real"
-      dir_name = "Real $i"
-  elseif dir_type == "Simulation"
-      dir_name = "Simulation $i"
-  else
-      error("Invalid directory type. Choose either 'Real' or 'Simulation'.")
-  end
+    if dir_type == "real"
+        base_path = joinpath(base_path, "real_data_sim")
+        dir_name = "real$i"
+    elseif dir_type == "synthetic"
+        base_path = joinpath(base_path, "synthetic_data_sim")
+        dir_name = "synthetic$i"
+    else
+        error("Invalid directory type. Choose either 'real' or 'synthetic'.")
+    end
   
-  dir_path = joinpath(base_path, dir_name)
+    dir_path = joinpath(base_path, dir_name)
   
-  while isdir(dir_path)
-      i += 1
-      if dir_type == "Real"
-          dir_name = "Real $i"
-      elseif dir_type == "Simulation"
-          dir_name = "Simulation $i"
-      end
-      dir_path = joinpath(base_path, dir_name)
-  end
+    while isdir(dir_path)
+        i += 1
+        if dir_type == "real"
+            dir_name = "real$i"
+        elseif dir_type == "synthetic"
+            dir_name = "synthetic$i"
+        end
+        dir_path = joinpath(base_path, dir_name)
+    end
   
-  mkpath(dir_path)
-  println("Directory created at: $dir_path")
-  cd(dir_path)
+    mkpath(dir_path)
+    println("Directory created at: $dir_path")
+    cd(dir_path)
 end
 
 # function to save the params of the simulated data
@@ -182,25 +193,26 @@ function save_result(result::SimulatedAnnealingABC.SABCresult{Vector{Float64}, F
 end
 
 function switch_dir(dir_type::String, i::Int64 = 1)
-  curr_path = pwd()
-  dir = "Simulations"
+    curr_path = pwd()
 
-  if dir_type == "Real"
-    dir_name = "Real $i"
-  elseif dir_type == "Simulation"
-    dir_name = "Simulation $i"
-  else
-    error("Invalid directory type. Choose either 'Real' or 'Simulation'.")
-  end
+    if dir_type == "real"
+        dir = "real_data_sim"
+        dir_name = "real$i"
+    elseif dir_type == "Synthetic"
+        dir = "synthetic_data_sim"
+        dir_name = "synthetic$i"
+    else
+        error("Invalid directory type. Choose either 'real' or 'synthetic'.")
+    end
 
-  path = joinpath(curr_path, dir, dir_name)
+    path = joinpath(curr_path, dir, dir_name)
   
-  if isdir(path)
-    cd(path)
-    println("Moved to: $path")
-  else
-    throw(ErrorException("Directory does not exist: $path"))
-  end
+    if isdir(path)
+        cd(path)
+        println("Moved to: $path")
+    else
+        throw(ErrorException("Directory does not exist: $path"))
+    end
 end
 
 # function to load the parameters of the simulation
