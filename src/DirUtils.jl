@@ -22,6 +22,7 @@ using Distributions
 using DataFrames
 using CSV
 using XLSX
+using DocStringExtensions
 
 # function to load the dataset
 """
@@ -114,13 +115,13 @@ end
 
 # function to save the solution of the SDDE for the simulated data
 function save_solution(sol::Union{RODESolution, Vector{RODESolution}})
-  curr_path = pwd()
-  filename = "simulated_sol.csv"
-  path = joinpath(curr_path, filename)
+    curr_path = pwd()
+    filename = "synthetic_sol.csv"
+    path = joinpath(curr_path, filename)
 
-  solution_df = DataFrame(Time = sol.t, u = sol[1, :], du = sol[2, :])
-  CSV.write(filename, solution_df)
-  println("Solution saved to file: $path")
+    solution_df = DataFrame(Time = sol.t, u = sol[1, :], du = sol[2, :])
+    CSV.write(filename, solution_df)
+    println("Solution saved to file: $path")
 end
 
 # function to save the prior as a string
