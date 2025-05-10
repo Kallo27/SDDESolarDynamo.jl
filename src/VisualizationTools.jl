@@ -68,7 +68,17 @@ function plot_fourier_spectrum(t::Union{Vector{Float64}, Vector{Int64}}, u::Vect
   end
 end
 
+
 """
+$(TYPEDSIGNATURES)
+Plots the time series of magnetic field strength.
+
+# PARAMETERS
+- `t::Union{Vector{Float64}, Vector{Int64}}`: Time values.
+- `u::Vector{Float64}`: Magnetic field strength values.
+
+# RETURNS
+- The function does not return a value but displays the plot.
 """
 function plot_data(t::Union{Vector{Float64}, Vector{Int64}}, u::Vector{Float64})
   p = Plots.plot(t, u, label = "B(t)", xlabel = "Time", ylabel = "Magnetic Field Strength", 
@@ -78,6 +88,17 @@ function plot_data(t::Union{Vector{Float64}, Vector{Int64}}, u::Vector{Float64})
 end
   
 # function for plotting u and epsilon behaviour in the sABC simulation
+"""
+$(TYPEDSIGNATURES)
+Plots the history of epsilon and u in the sABC simulation.
+
+# PARAMETERS
+- `eps_hist`: History of epsilon values.
+- `u_hist`: History of u values.
+
+# RETURNS
+- The function does not return a value but displays the plot.
+"""
 function u_eps_plot(eps_hist, u_hist)
   p1 = Plots.plot(vec(Matrix(eps_hist)), title="Epsilon History", xlabel="Iteration", legend=false, yscale=:log10)
   p2 = Plots.plot(vec(Matrix(u_hist)), title="U History", xlabel="Iteration", legend=false)
@@ -89,6 +110,17 @@ function u_eps_plot(eps_hist, u_hist)
 end
 
 # function for plotting of rhos behaviour in the sABC simulation
+"""
+$(TYPEDSIGNATURES)
+Plots the history of rhos in the sABC simulation.
+
+# PARAMETERS
+- `rho_hist`: History of rho values.
+- `style::String="together"`: Style of plotting. Accepted values are `"together"` or `"divided"`.
+
+# RETURNS
+- The function does not return a value but displays the plot.
+"""
 function rho_plot(rho_hist; style::String = "together")
   if style == "divided"
     rho_plots = []
@@ -118,6 +150,16 @@ function rho_plot(rho_hist; style::String = "together")
 end 
 
 # Function for plotting the posterior as a corner plot
+"""
+$(TYPEDSIGNATURES)
+Plots the posterior distribution as a corner plot.
+
+# PARAMETERS
+- `post_par`: Posterior parameters to plot.
+
+# RETURNS
+- The function does not return a value but displays the plot.
+"""
 function post_plotting_real(post_par)
   p = pairplot(post_par)
 
@@ -125,6 +167,17 @@ function post_plotting_real(post_par)
   CairoMakie.save("posteriors.png", p)
 end
 
+"""
+$(TYPEDSIGNATURES)
+Plots the posterior distribution with true parameter values as a corner plot.
+
+# PARAMETERS
+- `posterior_params`: Posterior parameters to plot.
+- `true_vals`: True values of parameters for comparison.
+
+# RETURNS
+- The function does not return a value but displays the plot.
+"""
 function post_plotting_sim(posterior_params, true_vals)
   p = pairplot(
     posterior_params,
@@ -146,6 +199,16 @@ function post_plotting_sim(posterior_params, true_vals)
 end
 
 # Function for plotting the rhos in a loglog scale
+"""
+$(TYPEDSIGNATURES)
+Plots the history of rhos in a loglog scale.
+
+# PARAMETERS
+- `rho_hist`: History of rho values.
+
+# RETURNS
+- The function does not return a value but displays the plot.
+"""
 function rho_history(rho_hist)
   labels = ["rho$i" for i in 1:size(Matrix(rho_hist), 1)]
   
