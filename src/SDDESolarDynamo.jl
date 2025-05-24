@@ -26,7 +26,8 @@ using FFTW
 # Box-shaped function for the magnetic field range
 """
 $(TYPEDSIGNATURES)
-Box-shaped function modeling the effective strength of the magnetic field.
+Box-shaped function modeling the effective strength of the magnetic field 
+as a smooth window function, turning on at B_min and off at B_max.
 
 # PARAMETERS
 - B: Input magnetic field (scalar or array).
@@ -43,7 +44,8 @@ end
 # Drift function for the SDDE
 """
 $(TYPEDSIGNATURES)
-Drift function for the stochastic delay differential equation (SDDE) of the solar dynamo model.
+Drift function for the stochastic delay differential equation (SDDE) describing 
+the deterministic evolution of the solar magnetic field, including delayed feedback from past states.
 
 # PARAMETERS
 - du: Array where the drift result is stored.
@@ -68,7 +70,8 @@ end
 # Noise function for the SDDE
 """
 $(TYPEDSIGNATURES)
-Noise term for the SDDE of the solar dynamo model.
+Noise term for the stochastic delay differential equation (SDDE), 
+modeling random fluctuations in the solar dynamo with amplitude set by physical parameters.
 
 # PARAMETERS
 - du: Array where the noise contribution is stored.
@@ -89,7 +92,8 @@ end
 # SDDE problem solver
 """
 $(TYPEDSIGNATURES)
-Solves the SDDE problem for the magnetic field evolution.
+Solves the stochastic delay differential equation (SDDE) for the magnetic 
+field dynamics, returning the full time evolution over the specified interval.
 
 # PARAMETERS
 - θ: Vector of parameters [tau, T, N, sigma, Bmax].
@@ -113,7 +117,8 @@ end
 # Distance function in the sABC algorithm
 """
 $(TYPEDSIGNATURES)
-Computes the distance metric between simulated and observed summary statistics for sABC.
+Computes the distance metric used in the sequential Approximate Bayesian Computation (sABC) 
+algorithm, by comparing Fourier-based summary statistics of simulated and observed magnetic field data.
 
 # PARAMETERS
 - θ::Vector{Float64}: Model parameters.
@@ -139,7 +144,8 @@ end
 # Function for the summary statistics
 """
 $(TYPEDSIGNATURES)
-Computes a reduced version of the Fourier spectrum to be used as summary statistics.
+Computes a reduced set of Fourier coefficients from a time series, serving as 
+summary statistics for comparing simulated and observed magnetic field data.
 
 # PARAMETERS
 - u::Vector{Float64}: Time series data (typically B²).
