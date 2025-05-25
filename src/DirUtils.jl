@@ -275,7 +275,7 @@ function switch_dir(dir_type::String, i::Int64 = 1)
     if dir_type == "real"
         dir = "real_data_sim"
         dir_name = "real$i"
-    elseif dir_type == "Synthetic"
+    elseif dir_type == "synthetic"
         dir = "synthetic_data_sim"
         dir_name = "synthetic$i"
     else
@@ -364,7 +364,7 @@ Loads a saved SDDE simulation solution from CSV.
 # RETURNS
 - Tuple: (t::Vector{Float64}, u::Vector{Float64}, du::Vector{Float64})
 """
-function load_solution(filename::String = "simulated_sol.csv")
+function load_solution(filename::String = "synthetic_sol.csv")
   df = CSV.read(filename, DataFrame)
 
   t = Vector(df.Time)

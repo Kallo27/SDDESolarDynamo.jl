@@ -21,6 +21,7 @@ using StochasticDelayDiffEq
 using SpecialFunctions
 using Distances
 using FFTW
+using DocStringExtensions
 
 
 # Box-shaped function for the magnetic field range
