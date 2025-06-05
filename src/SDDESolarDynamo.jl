@@ -13,7 +13,7 @@ using .SDDESolarDynamo
 """
 
 # EXPORTED FUNCTIONS
-export f, drift, noise!, bfield, f_dist, reduced_fourier_spectrum
+export f, drift, noise!, bfield, f_dist, reduced_fourier_spectrum, select_best_particles, postprocessing_params
 
 
 # REQUIRED PACKAGES
@@ -22,6 +22,8 @@ using SpecialFunctions
 using Distances
 using FFTW
 using DocStringExtensions
+using DataFrames
+using StatsBase
 
 
 # Box-shaped function for the magnetic field range
@@ -160,6 +162,88 @@ function reduced_fourier_spectrum(u::Vector{Float64}, indices::Union{Vector{Int6
   return fourier_transform[indices]
 end
 
+# Function to select best behaving particles
+"""
+$(TYPEDSIGNATURES)
+Computes the MSE over the distances (rhos) and selects the k best particles.
 
+# PARAMETERS
+- df_rho::DataFrame: Dataframe containing the rhos.
+- df_pop::DataFrame: Dataframe containing the population (particles).
+- k::Int=10: Number of best particles to extract.
+
+# RETURNS
+- best_indices::Vector{Int64}: indices of the best particles.
+- best_particles::DataFrame: Dataframe containing the best particles
+"""
+function select_best_particles(df_rho::DataFrame, df_pop::DataFrame; k::Int=10)
+    # Square all values and compute row-wise sum of squares
+    df_squared = DataFrame()
+    for col in names(df_rho)
+      df_squared[!, col] = df_rho[!, col].^2
+    end
+
+    row_sums = [sum(row) for row in eachrow(df_squared)]
+
+    best_indices = partialsortperm(row_sums, 1:k)
+    best_particles = df_pop[best_indices, :]
+
+    return best_indices, best_particles
+end
+
+# Function to postprocess particles results for analysis
+"""
+$(TYPEDSIGNATURES)
+Computes the mean, mode or hybrid procedure to get the best simulation params.
+
+# PARAMETERS
+- df_pop::DataFrame: Dataframe containing the population (particles).
+- strategy::Symbol: Type of postprocessing to apply.
+
+# RETURNS
+- par::Vector{Int64}: Postprocessed simulation parameters.
+- title_str::String: Title for the plot based on the chosen strategy.
+"""
+function postprocessing_params(param_samples::DataFrame; strategy::Symbol = :mode)
+  n_cols = size(param_samples, 2)
+  par = Vector{Float64}(undef, n_cols)
+
+  if strategy == :mode
+    for col in 1:n_cols
+      par[col] = mode(param_samples[:, col])
+    end
+    title_str = "Mode param data"
+
+  elseif strategy == :mean
+    for col in 1:n_cols
+      par[col] = mean(param_samples[:, col])
+    end
+    title_str = "Mean param data"
+
+  elseif strategy == :hybrid
+    # Start with mode
+    for col in 1:n_cols
+      par[col] = mode(param_samples[:, col])
+    end
+
+    # Apply filters
+    N_vals = param_samples[:, 1]
+    N_vals = N_vals[N_vals .> 3]
+    par[1] = mean(N_vals)
+
+    T_vals = param_samples[:, 2]
+    T_vals = T_vals[(T_vals .> 0.5) .& (T_vals .< 4)]
+    par[2] = mean(T_vals)
+
+    title_str = "Hybrid param data"
+
+  else
+    error("Unknown strategy: $strategy. Use :mode, :mean or :hybrid.")
+  end
+
+  println("Selected parameters ($strategy): ", par)
+
+  return par, title_str
+end
 
 end
