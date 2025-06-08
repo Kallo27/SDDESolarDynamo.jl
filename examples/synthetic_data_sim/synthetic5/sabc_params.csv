@@ -1,0 +1,7 @@
+Parameter,Value
+prior,"product_distribution(Uniform(1.0, 15.0), Uniform(0.1, 15.0), Uniform(0.1, 6.0), Uniform(0.01, 0.3), Uniform(1.0, 15.0))"
+n_particles,1000
+n_simulation,50000
+v,1.0
+type,1
+indices,1:5:116
